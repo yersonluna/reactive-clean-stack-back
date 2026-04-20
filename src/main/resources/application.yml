@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: franchise-api
+  webflux:
+    base-path: /api
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/franchise_db
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    com.franchise: DEBUG

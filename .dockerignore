@@ -1,0 +1,12 @@
+.git
+.gitignore
+.idea
+*.iml
+target
+.classpath
+.project
+.settings
+*.log
+.DS_Store
+node_modules
+README.md

@@ -1,0 +1,46 @@
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+*.swp
+*.swo
+*~
+
+# Build
+target/
+build/
+dist/
+*.jar
+*.war
+*.ear
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# Java
+*.class
+*.jar
+*.war
+
+# Spring Boot
+application-local.yml
+application-prod.yml
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Node (if used)
+node_modules/
+npm-debug.log

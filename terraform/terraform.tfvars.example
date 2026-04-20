@@ -1,0 +1,17 @@
+# Azure Configuration
+resource_group_name = "franchise-production-rg"
+location            = "eastus"
+
+# Container Registry
+registry_name = "franchiseproductioncr"
+
+# Cosmos DB (MongoDB)
+cosmos_account_name = "franchise-cosmos-prod"
+database_name       = "franchise_db"
+
+# App Service
+app_service_plan_name = "franchise-prod-plan"
+app_service_name      = "franchise-api-prod"
+
+# Application Insights
+app_insights_name = "franchise-insights-prod"
