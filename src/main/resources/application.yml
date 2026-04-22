@@ -5,7 +5,7 @@ spring:
   # Conexión a MongoDB Atlas
   data:
     mongodb:
-      uri: mongodb+srv://yersonluna:m4lKOfCVK97DME4B@cluster0.nt7pija.mongodb.net/franchise_db?retryWrites=true&w=majority&appName=Cluster0
+      uri: mongodb+srv://yersonluna:Sonyer232606.@cluster0.hcd69qv.mongodb.net/franchise_db?retryWrites=true&w=majority&appName=Cluster0
 
   # Importante: Desactivamos el soporte de Docker Compose para evitar conflictos
   docker:
