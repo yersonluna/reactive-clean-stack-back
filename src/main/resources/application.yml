@@ -1,14 +1,22 @@
 spring:
   application:
     name: franchise-api
-  webflux:
-    base-path: /api
+  
+  # Conexión a MongoDB Atlas
   data:
     mongodb:
-      uri: mongodb://localhost:27017/franchise_db
+      uri: mongodb+srv://yersonluna:Sonyer232606.@cluster0.hcd69qv.mongodb.net/franchise_db?retryWrites=true&w=majority&appName=Cluster0
+
+  # Importante: Desactivamos el soporte de Docker Compose para evitar conflictos
+  docker:
+    compose:
+      enabled: false
+
+  webflux:
+    base-path: /api
 
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
 
 logging:
   level:

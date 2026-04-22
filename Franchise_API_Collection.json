@@ -1,0 +1,88 @@
+{
+	"info": {
+		"_postman_id": "8a2d3b4c-5e6f-7g8h-9i0j-1k2l3m4n5o6p",
+		"name": "Franchise Management API - Ruta Tech 360",
+		"description": "Colección de peticiones para el sistema de gestión de franquicias (Clean Architecture + Spring WebFlux)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "RF-01: Crear Franquicia",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Franquicia Neiva Premium\"\n}",
+					"options": { "raw": { "language": "json" } }
+				},
+				"url": { "raw": "http://localhost:8080/api/franchises", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "franchises"] }
+			}
+		},
+		{
+			"name": "RF-02: Agregar Sucursal",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Sucursal Centro\"\n}",
+					"options": { "raw": { "language": "json" } }
+				},
+				"url": { "raw": "http://localhost:8080/api/franchises/{{franchiseId}}/branches", "host": ["localhost"], "port": "8080", "path": ["api", "franchises", "{{franchiseId}}", "branches"] }
+			}
+		},
+		{
+			"name": "RF-03: Agregar Producto",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Café Especial Huila\",\n    \"stock\": 100\n}",
+					"options": { "raw": { "language": "json" } }
+				},
+				"url": { "raw": "http://localhost:8080/api/franchises/{{franchiseId}}/branches/{{branchId}}/products", "host": ["localhost"], "port": "8080", "path": ["api", "franchises", "{{franchiseId}}", "branches", "{{branchId}}", "products"] }
+			}
+		},
+		{
+			"name": "RF-05: Actualizar Stock",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"newStock\": 150\n}",
+					"options": { "raw": { "language": "json" } }
+				},
+				"url": { "raw": "http://localhost:8080/api/franchises/{{franchiseId}}/branches/{{branchId}}/products/{{productId}}/stock", "host": ["localhost"], "port": "8080", "path": ["api", "franchises", "{{franchiseId}}", "branches", "{{branchId}}", "products", "{{productId}}", "stock"] }
+			}
+		},
+		{
+			"name": "RF-07: Renombrar Franquicia",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"newName\": \"Nuevo Nombre Franquicia\"\n}",
+					"options": { "raw": { "language": "json" } }
+				},
+				"url": { "raw": "http://localhost:8080/api/franchises/{{franchiseId}}/rename", "host": ["localhost"], "port": "8080", "path": ["api", "franchises", "{{franchiseId}}", "rename"] }
+			}
+		},
+		{
+			"name": "Listar Todas las Franquicias",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": { "raw": "http://localhost:8080/api/franchises", "host": ["localhost"], "port": "8080", "path": ["api", "franchises"] }
+			}
+		}
+	],
+	"variable": [
+		{ "key": "franchiseId", "value": "ID_AQUÍ" },
+		{ "key": "branchId", "value": "ID_AQUÍ" },
+		{ "key": "productId", "value": "ID_AQUÍ" }
+	]
+}

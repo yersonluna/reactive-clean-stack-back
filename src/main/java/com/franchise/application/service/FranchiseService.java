@@ -5,31 +5,41 @@ import com.franchise.domain.entity.Franchise;
 import com.franchise.domain.entity.Product;
 import com.franchise.infrastructure.persistence.FranchiseRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.UUID;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
+@SuppressWarnings("null")
 public class FranchiseService {
 
     private final FranchiseRepository franchiseRepository;
 
     // RF-01: Agregar Franquicia
-    public Mono<Franchise> addFranchise(String name) {
-        return Mono.defer(() -> {
-            Franchise franchise = Franchise.builder()
-                    .id(UUID.randomUUID().toString())
-                    .name(name)
-                    .createdAt(LocalDateTime.now())
-                    .updatedAt(LocalDateTime.now())
-                    .build();
-            return franchiseRepository.save(franchise);
-        });
-    }
+public Mono<Franchise> addFranchise(String name) {
+    // Creamos el objeto fuera del defer para mayor claridad
+    Franchise franchise = Franchise.builder()
+            .id(UUID.randomUUID().toString())
+            .name(name)
+            .createdAt(LocalDateTime.now())
+            .updatedAt(LocalDateTime.now())
+            .branches(new ArrayList<>()) // Inicializa la lista para evitar NullPointerException luego
+            .build();
+
+    return franchiseRepository.save(franchise)
+            .onErrorResume(e -> {
+                log.error("Error al persistir la franquicia: {}", e.getMessage());
+                return Mono.error(new RuntimeException("No se pudo guardar la franquicia"));
+            });
+}
 
     // RF-02: Agregar Sucursal
     public Mono<Franchise> addBranch(String franchiseId, String branchName) {

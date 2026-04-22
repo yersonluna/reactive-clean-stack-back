@@ -4,6 +4,7 @@ import com.franchise.application.service.FranchiseService;
 import com.franchise.domain.entity.Franchise;
 import com.franchise.infrastructure.dto.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +12,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/api/franchises")
+@RequestMapping("/franchises")
+@Slf4j
 @RequiredArgsConstructor
 public class FranchiseController {
 
@@ -23,7 +25,10 @@ public class FranchiseController {
         return franchiseService.addFranchise(request.getName())
                 .map(this::toFranchiseResponse)
                 .map(response -> ResponseEntity.status(HttpStatus.CREATED).body(response))
-                .onErrorResume(e -> Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).build()));
+                .onErrorResume(e -> {
+                    log.error("Error creating franchise: {}", e.getMessage());
+                    return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+                });
     }
 
     // RF-02: Agregar Sucursal
@@ -34,7 +39,10 @@ public class FranchiseController {
         return franchiseService.addBranch(franchiseId, request.getName())
                 .map(this::toFranchiseResponse)
                 .map(response -> ResponseEntity.status(HttpStatus.CREATED).body(response))
-                .onErrorResume(e -> Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build()));
+                .onErrorResume(e -> {
+                    log.error("Error adding branch to franchise {}: {}", franchiseId, e.getMessage());
+                    return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+                });
     }
 
     // RF-03: Agregar Producto
@@ -46,7 +54,10 @@ public class FranchiseController {
         return franchiseService.addProduct(franchiseId, branchId, request.getName(), request.getStock())
                 .map(this::toFranchiseResponse)
                 .map(response -> ResponseEntity.status(HttpStatus.CREATED).body(response))
-                .onErrorResume(e -> Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build()));
+                .onErrorResume(e -> {
+                    log.error("Error adding product to branch {}: {}", branchId, e.getMessage());
+                    return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+                });
     }
 
     // RF-04: Eliminar Producto
@@ -56,8 +67,11 @@ public class FranchiseController {
             @PathVariable String branchId,
             @PathVariable String productId) {
         return franchiseService.deleteProduct(franchiseId, branchId, productId)
-                .map(_ -> ResponseEntity.noContent().<Void>build())
-                .onErrorResume(e -> Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build()));
+                .then(Mono.just(ResponseEntity.noContent().<Void>build()))
+                .onErrorResume(e -> {
+                    log.error("Error deleting product {}: {}", productId, e.getMessage());
+                    return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+                });
     }
 
     // RF-05: Modificar Stock
@@ -68,18 +82,21 @@ public class FranchiseController {
             @PathVariable String productId,
             @RequestBody UpdateStockRequest request) {
         return franchiseService.updateStock(franchiseId, branchId, productId, request.getStock())
-                .map(franchise -> {
+                .flatMap(franchise -> {
                     var branch = franchise.getBranches().stream()
                             .filter(b -> b.getId().equals(branchId))
                             .findFirst()
-                            .orElseThrow();
+                            .orElseThrow(() -> new RuntimeException("Branch not found"));
                     var product = branch.getProducts().stream()
                             .filter(p -> p.getId().equals(productId))
                             .findFirst()
-                            .orElseThrow();
-                    return ResponseEntity.ok(toProductResponse(product));
+                            .orElseThrow(() -> new RuntimeException("Product not found"));
+                    return Mono.just(ResponseEntity.ok(toProductResponse(product)));
                 })
-                .onErrorResume(e -> Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build()));
+                .onErrorResume(e -> {
+                    log.error("Error updating stock for product {}: {}", productId, e.getMessage());
+                    return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+                });
     }
 
     // RF-06: Top Stock por Sucursal
