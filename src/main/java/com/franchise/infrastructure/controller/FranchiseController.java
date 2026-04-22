@@ -12,7 +12,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/franchises")
+@RequestMapping("/api/franchises")
 @Slf4j
 @RequiredArgsConstructor
 public class FranchiseController {
